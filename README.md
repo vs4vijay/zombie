@@ -1,3 +1,5 @@
+# Zombie
+
 Install the gem:
 
 gem install sinatra
