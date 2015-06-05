@@ -1,17 +1,19 @@
 # zombie.rb
+
 require 'sinatra'
+require 'pony'
 
 enable :sessions
 set :public_folder, File.dirname(__FILE__) + '/'
 #set :views, settings.root + '/templates'
 
-use Rack::Lint
+# use Rack::Lint
 # use Rack::Auth::Basic do |username, password|
 #   username == 'admin' && password == 'admin'
 # end
 
 get '/' do
-  'Hello Zombies!'
+  send_file 'index.html'
 end
 
 get '/login' do
@@ -24,6 +26,17 @@ post '/login' do
   else
     redirect '/login'
   end
+end
+
+get '/mail' do
+  Pony.mail(:to => 'Vijay@policybazaar.com', :from => 'vs4vijay@gmail.com', :subject => 'from sinatra app', :via => :smtp, :via_options => {
+      :address        => 'smtp.sendgrid.net',
+      :port           => '587',
+      :authentication => :plain,
+      :user_name      => ENV['SENDGRID_USERNAME'],
+      :password       => ENV['SENDGRID_PASSWORD'],
+      :domain         => 'heroku.com'
+  })
 end
 
 get '/code' do
